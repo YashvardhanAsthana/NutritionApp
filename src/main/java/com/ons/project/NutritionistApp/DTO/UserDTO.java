@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,5 +19,7 @@ public class UserDTO {
     private String username;
 
     private String password;
+
+    private Set<FoodDTO> bookmarks = new HashSet<>();
 }
 
