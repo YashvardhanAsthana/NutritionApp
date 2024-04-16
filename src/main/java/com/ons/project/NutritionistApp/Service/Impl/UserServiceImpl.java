@@ -7,6 +7,8 @@ import com.ons.project.NutritionistApp.Entity.UserEntity;
 import com.ons.project.NutritionistApp.Repository.FoodRepository;
 import com.ons.project.NutritionistApp.Repository.UserRepository;
 import com.ons.project.NutritionistApp.Service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,23 @@ public class UserServiceImpl implements UserService {
             return userDTO;
         }
         return null;
+    }
+
+    @Override
+    public String login(String username, String password) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user != null && user.getPassword().equals(password)) {
+            // Generate and return JWT token here
+            return generateToken(username);
+        }
+        return null; // or throw an exception indicating login failure
+    }
+
+    private String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .signWith(SignatureAlgorithm.HS512, "yourSecretKey") // Use a strong secret key here
+                .compact();
     }
 
     @Override
@@ -109,6 +128,38 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         } else {
             throw new RuntimeException("Bookmark not found for user with ID: " + userId + " and food ID: " + foodId);
+        }
+    }
+//
+//    public String getUserBookmarksWithFoodDetails(Long userId) {
+//        Optional<UserEntity> userOptional = userRepository.findById(userId);
+//        if (userOptional.isPresent()) {
+//            UserEntity user = userOptional.get();
+//            Set<FoodEntity> bookmarks = user.getBookmarks();
+//            StringBuilder result = new StringBuilder();
+//            for (FoodEntity food : bookmarks) {
+//                result.append("Food ID: ").append(food.getId()).append(", Name: ").append(food.getName()).append("\n");
+//            }
+//            return result.toString();
+//        }
+//        return "User not found";
+//    }
+
+    public String getUserBookmarksWithFoodDetails(Long userId) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            Set<FoodEntity> bookmarks = user.getBookmarks();
+            if (bookmarks.isEmpty()) {
+                return "User has no bookmarks.";
+            }
+            StringBuilder result = new StringBuilder();
+            for (FoodEntity food : bookmarks) {
+                result.append("Food ID: ").append(food.getId()).append(", Name: ").append(food.getName()).append("\n");
+            }
+            return result.toString();
+        } else {
+            return "User not found.";
         }
     }
 

@@ -29,22 +29,5 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "food_id")
     )
     private Set<FoodEntity> bookmarks = new HashSet<>();
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_favorite_foods",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "food_id")
-//    )
-//    private Set<FoodEntity> favoriteFoods = new HashSet<>();
-//
-//    public void addFavoriteFood(FoodEntity food) {
-//        favoriteFoods.add(food);
-//        food.getFans().add(this);
-//    }
-//
-//    public void removeFavoriteFood(FoodEntity food) {
-//        favoriteFoods.remove(food);
-//        food.getFans().remove(this);
-//    }
+
 }

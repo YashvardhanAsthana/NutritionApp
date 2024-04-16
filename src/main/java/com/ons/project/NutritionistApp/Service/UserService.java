@@ -23,5 +23,9 @@ public interface UserService {
 
     void removeBookmark(Long userId, Long foodId);
 
+    String login(String username, String password);
+
+    String getUserBookmarksWithFoodDetails(Long userId);
+
 
 }

@@ -3,6 +3,8 @@ package com.ons.project.NutritionistApp.Controller;
 import com.ons.project.NutritionistApp.DTO.FoodDTO;
 import com.ons.project.NutritionistApp.DTO.UserDTO;
 import com.ons.project.NutritionistApp.Entity.UserEntity;
+import com.ons.project.NutritionistApp.Login.LoginRequest;
+import com.ons.project.NutritionistApp.Login.LoginResponse;
 import com.ons.project.NutritionistApp.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,10 +52,22 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+//    @GetMapping("/{userId}/bookmarks")
+//    public ResponseEntity<Set<FoodDTO>> getBookmarks(@PathVariable Long userId) {
+//        Set<FoodDTO> bookmarks = userService.getBookmarks(userId);
+//        return ResponseEntity.ok(bookmarks);
+//    }
+
     @GetMapping("/{userId}/bookmarks")
-    public ResponseEntity<Set<FoodDTO>> getBookmarks(@PathVariable Long userId) {
-        Set<FoodDTO> bookmarks = userService.getBookmarks(userId);
-        return ResponseEntity.ok(bookmarks);
+    public ResponseEntity<Object> getUserBookmarksWithFoodDetails(@PathVariable Long userId) {
+        String bookmarksInfo = userService.getUserBookmarksWithFoodDetails(userId);
+        if (bookmarksInfo.startsWith("User not found.")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bookmarksInfo);
+        } else if (bookmarksInfo.startsWith("User has no bookmarks.")) {
+            return ResponseEntity.status(HttpStatus.OK).body(bookmarksInfo);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(bookmarksInfo);
+        }
     }
 
     @DeleteMapping("/{userId}/bookmark/{foodId}")
