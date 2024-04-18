@@ -130,20 +130,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Bookmark not found for user with ID: " + userId + " and food ID: " + foodId);
         }
     }
-//
-//    public String getUserBookmarksWithFoodDetails(Long userId) {
-//        Optional<UserEntity> userOptional = userRepository.findById(userId);
-//        if (userOptional.isPresent()) {
-//            UserEntity user = userOptional.get();
-//            Set<FoodEntity> bookmarks = user.getBookmarks();
-//            StringBuilder result = new StringBuilder();
-//            for (FoodEntity food : bookmarks) {
-//                result.append("Food ID: ").append(food.getId()).append(", Name: ").append(food.getName()).append("\n");
-//            }
-//            return result.toString();
-//        }
-//        return "User not found";
-//    }
 
     public String getUserBookmarksWithFoodDetails(Long userId) {
         Optional<UserEntity> userOptional = userRepository.findById(userId);
