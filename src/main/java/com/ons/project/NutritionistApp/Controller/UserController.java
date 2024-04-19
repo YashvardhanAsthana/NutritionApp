@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -30,6 +31,12 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping
     public UserEntity createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
@@ -41,9 +48,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
-        return "User data deleted.";
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        boolean deleted = userService.deleteUser(userId);
+        if (deleted) {
+            return ResponseEntity.ok("User with ID " + userId + " deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User with ID " + userId + " not found");
+        }
     }
 
     @PostMapping("/{userId}/bookmark/{foodId}")
@@ -51,12 +63,6 @@ public class UserController {
         userService.addBookmark(userId, foodId);
         return ResponseEntity.ok().build();
     }
-
-//    @GetMapping("/{userId}/bookmarks")
-//    public ResponseEntity<Set<FoodDTO>> getBookmarks(@PathVariable Long userId) {
-//        Set<FoodDTO> bookmarks = userService.getBookmarks(userId);
-//        return ResponseEntity.ok(bookmarks);
-//    }
 
     @GetMapping("/{userId}/bookmarks")
     public ResponseEntity<Object> getUserBookmarksWithFoodDetails(@PathVariable Long userId) {

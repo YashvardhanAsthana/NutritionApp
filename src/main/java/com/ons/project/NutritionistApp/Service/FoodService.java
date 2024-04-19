@@ -11,11 +11,12 @@ import java.util.Optional;
 public interface FoodService {
 
     List<FoodDTO> getAllFoods();
-//    FoodEntity addFavoriteFood(Long userId, Long foodId);
 
     FoodEntity addFood(FoodDTO foodDTO);
 
     FoodEntity updateFood(Long id, FoodDTO foodDTO);
 
-    FoodDTO getFood(Long id);
+    FoodDTO getFoodById(Long id);
+
+    boolean deleteFoodById(Long id);
 }

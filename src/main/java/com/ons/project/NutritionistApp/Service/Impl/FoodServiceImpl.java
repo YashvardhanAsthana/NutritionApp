@@ -34,12 +34,11 @@ public class FoodServiceImpl implements FoodService {
         foodEntity.setProtein(foodDTO.getProtein());
         foodEntity.setWater(foodDTO.getWater());
 
-        // Save the FoodEntity to the repository
         FoodEntity savedFood = foodRepository.save(foodEntity);
         return foodEntity;
     }
     @Override
-    public FoodDTO getFood(Long id) {
+    public FoodDTO getFoodById(Long id) {
         FoodEntity foodEntity = foodRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Food not found"));
 
@@ -51,7 +50,6 @@ public class FoodServiceImpl implements FoodService {
         foodDTO.setFats(foodEntity.getFats());
         foodDTO.setWater(foodEntity.getWater());
         foodDTO.setCategory(foodEntity.getCategory());
-        // Set other properties as needed
 
         return foodDTO;
     }
@@ -70,11 +68,9 @@ public class FoodServiceImpl implements FoodService {
             existingFood.setProtein(foodDTO.getProtein());
             existingFood.setWater(foodDTO.getWater());
 
-            // Save the updated FoodEntity to the repository
             return foodRepository.save(existingFood);
         }
 
-        // Handle the case where the food with the given ID is not found
         throw new RuntimeException("Food not found for ID: " + id);
     }
 
@@ -93,30 +89,19 @@ public class FoodServiceImpl implements FoodService {
             foodDTO.setCategory(foodEntity.getCategory());
             foodDTO.setProtein(foodEntity.getProtein());
             foodDTO.setWater(foodEntity.getWater());
-            // Add other attributes as needed
 
             foodDTOs.add(foodDTO);
         }
         return foodDTOs;
     }
-
-//
-//    @Override
-//    public FoodEntity addFavoriteFood(Long userId, Long foodId) {
-//        Optional<UserEntity> optionalUser = userRepository.findById(userId);
-//        Optional<FoodEntity> optionalFood = foodRepository.findById(foodId);
-//
-//        if (optionalUser.isPresent() && optionalFood.isPresent()) {
-//            UserEntity user = optionalUser.get();
-//            FoodEntity food = optionalFood.get();
-//
-//            user.addFavoriteFood(food);
-//            userRepository.save(user);
-//
-//            return food;
-//        }
-//
-//        return null;
-//    }
+    @Override
+    public boolean deleteFoodById(Long id) {
+        Optional<FoodEntity> optionalFood = foodRepository.findById(id);
+        if (optionalFood.isPresent()) {
+            foodRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
 }

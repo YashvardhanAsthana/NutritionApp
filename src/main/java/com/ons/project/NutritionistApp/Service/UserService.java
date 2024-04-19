@@ -12,11 +12,13 @@ public interface UserService {
 
     UserDTO getUserByUsername(String username);
 
+    List<UserDTO> getAllUsers();
+
     UserEntity createUser(UserDTO userDTO);
 
     UserEntity updateUser(Long userId, UserDTO userDTO);
 
-    String deleteUser(Long userId);
+    boolean deleteUser(Long userId);
 
     void addBookmark(Long userId, Long foodId);
     Set<FoodDTO> getBookmarks(Long userId);
@@ -26,6 +28,5 @@ public interface UserService {
     String login(String username, String password);
 
     String getUserBookmarksWithFoodDetails(Long userId);
-
 
 }

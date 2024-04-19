@@ -4,6 +4,7 @@ import com.ons.project.NutritionistApp.DTO.FoodDTO;
 import com.ons.project.NutritionistApp.Entity.FoodEntity;
 import com.ons.project.NutritionistApp.Service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,8 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
-    public FoodDTO getFood(@PathVariable Long id) {
-        return foodService.getFood(id);
+    public FoodDTO getFoodById(@PathVariable Long id) {
+        return foodService.getFoodById(id);
     }
 
 
@@ -41,11 +42,15 @@ public class FoodController {
         return updatedFood;
     }
 
-//
-//    @PostMapping("/favorites")
-//    public ResponseEntity<String> addFavoriteFood(@RequestParam Long userId, @RequestParam Long foodId) {
-//        foodService.addFavoriteFood(userId, foodId);
-//        return ResponseEntity.ok("Favorite food added successfully");
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFood(@PathVariable Long id) {
+        boolean deleted = foodService.deleteFoodById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Food with ID " + id + " deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Food with ID " + id + " not found");
+        }
+    }
 
 }

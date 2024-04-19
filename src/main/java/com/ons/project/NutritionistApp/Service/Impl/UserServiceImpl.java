@@ -13,10 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,13 +37,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDTO> getAllUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (UserEntity userEntity : userEntities) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(userEntity.getId());
+            userDTO.setUsername(userEntity.getUsername());
+
+            userDTOs.add(userDTO);
+        }
+        return userDTOs;
+    }
+
+    @Override
     public String login(String username, String password) {
         UserEntity user = userRepository.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
-            // Generate and return JWT token here
+
             return generateToken(username);
         }
-        return null; // or throw an exception indicating login failure
+        return null;
     }
 
     private String generateToken(String username) {
@@ -79,9 +90,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-        return "User data deleted";
+    public boolean deleteUser(Long userId) {
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(userId);
+            return true;
+        }
+        return false;
     }
 
     @Override
